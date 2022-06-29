@@ -26,6 +26,7 @@ class UniqueAttrClass(Generic[T], ABC):
         try:
             self.__unique_value_dict.__setitem__(key=attr, item=val)
             super().__setattr__(attr, val)
+            
         except NotUniqueValueDictError:
             raise NotUniqueValueAttrError
 

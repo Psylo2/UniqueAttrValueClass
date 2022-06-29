@@ -17,6 +17,7 @@
             ```
             
 * in case we use the same value it will raise `NotUniqueValueDictError`
+
             ```
             unique_dict_value = UniqueValueDict()
             

@@ -58,12 +58,14 @@ class UniqueValueDict(MutableMapping[KT, VT], Generic[KT, VT], ABC):
 
     def __insert_unique_value(self, key: KT, item: VT) -> None:
         self._check_unique_value(value=item)
-        self.exists_values_set.add(item)
-        self._dict[key] = item
+        self.__add_item(key=key, item=item)
 
     def __update_exists_item(self, key: KT, item: VT, exists_value: Dict[KT, VT]) -> None:
         self._check_unique_value(value=item)
-
         self.exists_values_set.discard(exists_value)
+        self.__add_item(key=key, item=item)
+        
+    def __add_item(self, key: KT, item: VT) -> None:
         self.exists_values_set.add(item)
-        self._dict[key] = item
+        self._dict[key] = item        
+   

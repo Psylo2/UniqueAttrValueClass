@@ -2,7 +2,7 @@
 
 **`UniqueValueDict()`**
 
-* UniqueValueDict is a normal behaviour `dict` that enforces uniques of values.
+* UniqueValueDict is `dict` that enforces uniques of values.
                                     
             ```
             unique_dict_value = UniqueValueDict()

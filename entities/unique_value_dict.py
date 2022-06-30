@@ -24,11 +24,8 @@ class UniqueValueDict(MutableMapping[KT, VT], Generic[KT, VT], ABC):
         exists_value = self._dict.get(key, {})
 
         if exists_value:
-            self.exists_values_set.discard(key)
             self._dict.__delitem__(key)
-
-            self.__dict__['exists_values_set'] = self.exists_values_set
-            self.__dict__['_dict'] = self._dict
+            self.__update_instance(exists_value=exists_value)
 
     def __delattr__(self, item):
         if item == "exists_values_set" or "_dict":
@@ -47,6 +44,26 @@ class UniqueValueDict(MutableMapping[KT, VT], Generic[KT, VT], ABC):
 
     def __iter__(self) -> Iterator[KT]:
         ...
+
+    def keys(self) -> KeysView[KT]:
+        return self._dict.keys()
+
+    def values(self) -> ValuesView[VT]:
+        return self._dict.values()
+
+    def items(self) -> ItemsView[KT, VT]:
+        return self._dict.items()
+
+    def popitem(self) -> Tuple[KT, VT]:
+        item_tuple = self._dict.popitem()
+        exists_value = item_tuple[1]
+        self.__update_instance(exists_value=exists_value)
+        return item_tuple
+
+    def __update_instance(self, exists_value: VT) -> None:
+        self.exists_values_set.discard(exists_value)
+        self.__dict__['exists_values_set'] = self.exists_values_set
+        self.__dict__['_dict'] = self._dict
 
     def __update_value(self, __m: Dict[KT, VT]) -> None:
         for key, value in __m.items():
@@ -68,15 +85,3 @@ class UniqueValueDict(MutableMapping[KT, VT], Generic[KT, VT], ABC):
     def __add_item(self, key: KT, item: VT) -> None:
         self.exists_values_set.add(item)
         self._dict[key] = item
-
-    def keys(self) -> KeysView[KT]:
-        return self._dict.keys()
-
-    def values(self) -> ValuesView[VT]:
-        return self._dict.values()
-
-    def items(self) -> ItemsView[KT, VT]:
-        return self._dict.items()
-
-    def popitem(self) -> Tuple[KT, VT]:
-        return self._dict.popitem()

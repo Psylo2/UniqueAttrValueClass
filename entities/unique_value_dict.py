@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import TypeVar, MutableMapping, Generic, Dict, Set, Iterator
+from typing import TypeVar, MutableMapping, Generic, Dict, Set, Tuple, Iterator, KeysView, ItemsView, ValuesView
 from exception import NotUniqueValueDictError
 
 KT = TypeVar('KT')
@@ -10,7 +10,7 @@ class UniqueValueDict(MutableMapping[KT, VT], Generic[KT, VT], ABC):
 
     def __init__(self) -> None:
         self.exists_values_set: Set[VT] = set()
-        self._dict: MutableMapping[str, VT] = {}
+        self._dict: MutableMapping[KT, VT] = {}
 
     def __setitem__(self, key: KT, item: VT) -> None:
         exists_value = self._dict.get(key, {})
@@ -43,7 +43,7 @@ class UniqueValueDict(MutableMapping[KT, VT], Generic[KT, VT], ABC):
         ...
 
     def __getitem__(self, k: KT) -> VT:
-        ...
+        return self._dict.__getitem__(k)
 
     def __iter__(self) -> Iterator[KT]:
         ...
@@ -64,8 +64,19 @@ class UniqueValueDict(MutableMapping[KT, VT], Generic[KT, VT], ABC):
         self._check_unique_value(value=item)
         self.exists_values_set.discard(exists_value)
         self.__add_item(key=key, item=item)
-        
+
     def __add_item(self, key: KT, item: VT) -> None:
         self.exists_values_set.add(item)
-        self._dict[key] = item        
-   
+        self._dict[key] = item
+
+    def keys(self) -> KeysView[KT]:
+        return self._dict.keys()
+
+    def values(self) -> ValuesView[VT]:
+        return self._dict.values()
+
+    def items(self) -> ItemsView[KT, VT]:
+        return self._dict.items()
+
+    def popitem(self) -> Tuple[KT, VT]:
+        return self._dict.popitem()

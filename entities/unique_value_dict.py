@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import TypeVar, MutableMapping, Generic, Dict, Set, Tuple, Iterator, KeysView, ItemsView, ValuesView
+from typing import TypeVar, MutableMapping, Generic, Set, Tuple, Iterator, KeysView, ItemsView, ValuesView
 from exception import NotUniqueValueDictError
 
 KT = TypeVar('KT')
@@ -7,6 +7,7 @@ VT = TypeVar('VT')
 
 
 class UniqueValueDict(MutableMapping[KT, VT], Generic[KT, VT], ABC):
+    __module__ = 'builtins'
 
     def __init__(self) -> None:
         self.exists_values_set: Set[VT] = set()
@@ -43,7 +44,7 @@ class UniqueValueDict(MutableMapping[KT, VT], Generic[KT, VT], ABC):
         return self._dict.__getitem__(k)
 
     def __iter__(self) -> Iterator[KT]:
-        ...
+        return self._dict.__iter__()
 
     def keys(self) -> KeysView[KT]:
         return self._dict.keys()
@@ -65,19 +66,19 @@ class UniqueValueDict(MutableMapping[KT, VT], Generic[KT, VT], ABC):
         self.__dict__['exists_values_set'] = self.exists_values_set
         self.__dict__['_dict'] = self._dict
 
-    def __update_value(self, __m: Dict[KT, VT]) -> None:
+    def __update_value(self, __m: MutableMapping[KT, VT]) -> None:
         for key, value in __m.items():
             self.__setitem__(key, value)
 
     def _check_unique_value(self, value: VT) -> None:
         if value in self.exists_values_set:
-            raise NotUniqueValueDictError
+            raise NotUniqueValueDictError("Value not unique.")
 
     def __insert_unique_value(self, key: KT, item: VT) -> None:
         self._check_unique_value(value=item)
         self.__add_item(key=key, item=item)
 
-    def __update_exists_item(self, key: KT, item: VT, exists_value: Dict[KT, VT]) -> None:
+    def __update_exists_item(self, key: KT, item: VT, exists_value: MutableMapping[KT, VT]) -> None:
         self._check_unique_value(value=item)
         self.exists_values_set.discard(exists_value)
         self.__add_item(key=key, item=item)

@@ -8,6 +8,7 @@ VT = TypeVar('VT')
 
 
 class UniqueAttrClass(Generic[T], ABC):
+    __module__ = 'builtins'
     __unique_value_dict: UniqueValueDict = UniqueValueDict()
 
     def __init__(self) -> None:
@@ -27,8 +28,8 @@ class UniqueAttrClass(Generic[T], ABC):
             self.__unique_value_dict.__setitem__(key=attr, item=val)
             super().__setattr__(attr, val)
             
-        except NotUniqueValueDictError:
-            raise NotUniqueValueAttrError
+        except NotUniqueValueDictError as e:
+            raise NotUniqueValueAttrError(e) from None
 
     def __delattr__(self, attr: str) -> None:
         if attr == "__unique_value_dict":

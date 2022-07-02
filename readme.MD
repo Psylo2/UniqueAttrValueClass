@@ -27,7 +27,7 @@
             unique_dict_value.update({'a': 3})
             
             ======================================
-            NotUniqueValueDictError exception.
+            NotUniqueValueDictError: Value not unique.
                   
                   
 **`UniqueAttrClass()`**
@@ -57,7 +57,7 @@
             setattr(unique_attr_class, 'attr_1', 3)
             
             ======================================
-            NotUniqueValueAttrError exception.
+            NotUniqueValueAttrError: Value not unique.
 
 
 

@@ -1,5 +1,5 @@
 class NotUniqueValueDictError(Exception):
-    pass
+    __module__ = Exception.__module__
 
 class NotUniqueValueAttrError(Exception):
-    pass
+    __module__ = Exception.__module__
